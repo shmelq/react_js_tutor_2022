@@ -1,12 +1,12 @@
-import { Button, Checkbox, List, Col, Input } from 'antd';
+import { Button, Checkbox, List, Col, Input, Pagination } from 'antd';
 import React, {Component } from 'react';
 
 export default class Todo extends Component {
 
     state = {
         todoList: [],
-        curentPage : 1,
-        perPage : 10,
+        curentpage : 1,
+        perpage : 12,
     }
 
     componentDidMount(){
@@ -44,16 +44,26 @@ export default class Todo extends Component {
         let defVariable = [{id: Math.random(), title:e.target.value, completed: false}]
         this.setState({todoList : [...this.state.todoList, ...defVariable] })
     }
+
+    handlerChangePagination = (page, pageSize) => {
+        console.log(page, pageSize)
+        this.setState({perpage : pageSize, curentpage: page})
+    }
+
     render(){
+
         const {todoList} = this.state;
-        
+        const {curentpage} = this.state;
+        const {perpage} = this.state;
+        const endlist = curentpage*perpage;
+        const beginlist = endlist - perpage;
         return(
             <>
                 <Col span={8} style={{margin: '0 auto'}}>
                     <h3>My todo list</h3>
                     <List>
                         <Input placeholder='Добавить todo в список' onPressEnter={(e) => this.handlerAddToTodo(e)}/>
-                        {todoList.map((item,index)=>{
+                        {todoList.slice(beginlist, endlist).map((item,index)=>{
                             return(
                                     
                                     <List.Item key={index} style={{listStyle: 'decimal', textDecoration : item.completed ? 'line-through' : 'none'}} >
@@ -64,6 +74,7 @@ export default class Todo extends Component {
                             )
                         })}
                     </List>
+                    <Pagination defaultCurrent={1} showSizeChanger={false} defaultPageSize={perpage} total={todoList.length} onChange={(page, pageSize) => this.handlerChangePagination(page, pageSize)}/>
                 </Col>
             </>
         )
