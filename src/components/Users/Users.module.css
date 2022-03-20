@@ -1,0 +1,8 @@
+.userlink {
+    color: blue;
+}
+
+.userlink:hover {
+    color: darkblue;
+    text-decoration: underline;
+}
